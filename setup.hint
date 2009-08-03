@@ -1,0 +1,7 @@
+category: GNUstep Devel
+requires: gnustep-common bash gcc4-objc make
+sdesc: "GNUstep makefiles"
+ldesc: "This makefile package is a simple, powerful and extensible way 
+to write makefiles for a GNUstep-based project.  It allows the user to 
+write a project without having to deal with the complex issues 
+associated with configuration, building, installation, and packaging."
