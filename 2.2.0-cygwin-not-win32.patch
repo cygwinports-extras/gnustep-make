@@ -1,0 +1,82 @@
+--- origsrc/gnustep-make-2.2.0/Instance/rules.make	2009-03-24 18:08:59.000000000 -0500
++++ src/gnustep-make-2.2.0/Instance/rules.make	2009-08-05 12:40:12.284428000 -0500
+@@ -235,13 +235,8 @@ ifeq ($(findstring mingw32, $(GNUSTEP_TA
+   WINDRES_OBJS = $(patsubst %.rc,%.rc$(OEXT),$($(GNUSTEP_INSTANCE)_WINDRES_FILES))
+   WINDRES_OBJ_FILES = $(addprefix $(GNUSTEP_OBJ_DIR)/,$(WINDRES_OBJS))
+ else
+-ifeq ($(findstring cygwin, $(GNUSTEP_TARGET_OS)), cygwin)
+-  WINDRES_OBJS = $(patsubst %.rc,%.rc$(OEXT),$($(GNUSTEP_INSTANCE)_WINDRES_FILES))
+-  WINDRES_OBJ_FILES = $(addprefix $(GNUSTEP_OBJ_DIR)/,$(WINDRES_OBJS))
+-else
+   WINDRES_OBJ_FILES =
+ endif
+-endif
+ 
+ OBJ_FILES = $($(GNUSTEP_INSTANCE)_OBJ_FILES)
+ 
+--- origsrc/gnustep-make-2.2.0/common.make	2009-02-25 06:47:15.000000000 -0600
++++ src/gnustep-make-2.2.0/common.make	2009-08-05 12:33:15.430808500 -0500
+@@ -795,7 +795,6 @@ endif
+ ifneq ($(FOUNDATION_LIB), apple)
+ # Under Win32 paths are so confused this warning is not worthwhile
+ ifneq ($(findstring mingw, $(GNUSTEP_HOST_OS)), mingw)
+-ifneq ($(findstring cygwin, $(GNUSTEP_HOST_OS)), cygwin)
+ 
+   ifeq ($(findstring $(GNUSTEP_SYSTEM_TOOLS),$(PATH)),)
+     $(warning WARNING: Your PATH may not be set up correctly !)
+@@ -803,7 +802,6 @@ ifneq ($(findstring cygwin, $(GNUSTEP_HO
+   endif
+ 
+ endif
+-endif
+ endif # code used when FOUNDATION_LIB != apple
+ 
+ endif # End of sanity checks run only at makelevel 0
+--- origsrc/gnustep-make-2.2.0/config.make.in	2009-03-30 18:05:16.000000000 -0500
++++ src/gnustep-make-2.2.0/config.make.in	2009-08-05 04:54:32.074299400 -0500
+@@ -68,11 +68,6 @@ endif
+ ifeq (@target_os@,mingw32)
+   HAS_LN_S = no
+ endif
+-# Special case - on cygwin, autoconf sets LN_S to 'ln -s', but then
+-# that does a recursive copy (ie, cp -r).
+-ifeq (@target_os@,cygwin)
+-  HAS_LN_S = no
+-endif 
+ 
+ # This is used to remove an existing symlink before creating a new
+ # one.  We don't trust 'ln -s -f' as it's unportable so we remove
+--- origsrc/gnustep-make-2.2.0/rules.make	2009-02-16 03:52:53.000000000 -0600
++++ src/gnustep-make-2.2.0/rules.make	2009-08-05 12:41:11.086827500 -0500
+@@ -612,19 +612,6 @@ $(GNUSTEP_OBJ_DIR)/%.rc$(OEXT): %.rc
+ 	$(ECHO_COMPILING)windres $< $@$(END_ECHO)
+ endif
+ 
+-#
+-# Special cygwin specific rules to compile Windows resource files (.rc files)
+-# into object files. (this is the same rule as mingw32)
+-#
+-ifeq ($(findstring cygwin, $(GNUSTEP_TARGET_OS)), cygwin)
+-# Add the .rc suffix on Windows.
+-.SUFFIXES: .rc
+-
+-# A rule to generate a .o file from the .rc file.
+-$(GNUSTEP_OBJ_DIR)/%.rc$(OEXT): %.rc
+-	$(ECHO_COMPILING)windres $< $@$(END_ECHO)
+-endif
+-
+ # The following dummy rules are needed for performance - we need to
+ # prevent make from spending time trying to compute how/if to rebuild
+ # the system makefiles!  the following rules tell him that these files
+--- origsrc/gnustep-make-2.2.0/target.make	2009-08-05 04:53:54.316222400 -0500
++++ src/gnustep-make-2.2.0/target.make	2009-08-05 12:43:06.483590700 -0500
+@@ -49,9 +49,6 @@ ifeq ($(findstring mingw32, $(GNUSTEP_TA
+ 	-lws2_32 -ladvapi32 -lcomctl32 -luser32 -lcomdlg32 \
+ 	-lmpr -lnetapi32 -lm -I. # the -I is a dummy to avoid -lm^M
+ endif
+-ifeq ($(findstring cygwin, $(GNUSTEP_TARGET_OS)), cygwin)
+-  TARGET_SYSTEM_LIBS = $(CONFIG_SYSTEM_LIBS) -lm -I. 
+-endif
+ ifeq ($(findstring solaris, $(GNUSTEP_TARGET_OS)), solaris)
+   TARGET_SYSTEM_LIBS = $(CONFIG_SYSTEM_LIBS) -lsocket -lnsl -lm
+ endif

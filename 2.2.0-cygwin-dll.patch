@@ -1,3 +1,10 @@
+
+	Cygwin DLL Makefile fixes.
+	* target.make [cygwin]: Use '-Wl,--enable-auto-image-base' instead
+	of manually rebasing.  Define DLL_PREFIX to match Cygwin conventions.
+	* Instance/framework.make: Use DLL_PREFIX.
+	* Instance/library.make: Ditto.
+
 --- origsrc/gnustep-make-2.2.0/Instance/framework.make	2009-03-19 11:59:53.000000000 -0500
 +++ src/gnustep-make-2.2.0/Instance/framework.make	2009-08-02 22:30:32.778992900 -0500
 @@ -285,7 +285,7 @@ SONAME_FRAMEWORK_FILE  = $(FRAMEWORK_LIB

@@ -1,10 +1,10 @@
-inherit gnustep autotools
+# we cannot 'inherit gnustep' before this is installed
 
 DESCRIPTION="GNUstep makefiles and build tools"
 HOMEPAGE="http://www.gnustep.org/"
 SRC_URI="mirror://gnustep/core/${P}.tar.gz"
 PATCH_URI="2.2.0-cygwin-dll.patch
-           2.2.0-homedir.patch
+           2.2.0-cygwin-not-win32.patch
            2.2.0-includedir.patch"
 
 mf=usr/share/GNUstep/Makefiles
