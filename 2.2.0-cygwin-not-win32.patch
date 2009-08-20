@@ -1,3 +1,10 @@
+
+	Update and un-Win32-ify Cygwin rules.
+	* common.make: MinGW path issues do not apply to Cygwin.
+	* config.make.in: Cygwin supports symlinks now.
+	* rules.make, Instance/rules.make: Don't use windres on Cygwin, as it uses X11.
+	* target.make: Cygwin does not require -lm.
+
 --- origsrc/gnustep-make-2.2.0/Instance/rules.make	2009-03-24 18:08:59.000000000 -0500
 +++ src/gnustep-make-2.2.0/Instance/rules.make	2009-08-05 12:40:12.284428000 -0500
 @@ -235,13 +235,8 @@ ifeq ($(findstring mingw32, $(GNUSTEP_TA

@@ -1,0 +1,33 @@
+
+	* Instance/application.make: Move ALL_LDFLAGS after OBJ_FILES_TO_LINK
+	so that any link libraries defined therein (e.g. ADDITIONAL_LDFLAGS)
+	actually do something with -Wl,--as-needed and on Win32.
+	* Instance/tool.make: Ditto.
+
+--- origsrc/gnustep-make-2.2.0/Instance/application.make	2009-03-19 11:59:53.000000000 -0500
++++ src/gnustep-make-2.2.0/Instance/application.make	2009-08-16 04:19:08.513492700 -0500
+@@ -128,8 +128,8 @@ $(APP_FILE): $(OBJ_FILES_TO_LINK)
+ ifeq ($(OBJ_FILES_TO_LINK),)
+ 	$(WARNING_EMPTY_LINKING)
+ endif
+-	$(ECHO_LINKING)$(LD) $(ALL_LDFLAGS) $(CC_LDFLAGS) -o $(LDOUT)$@ \
+-	$(OBJ_FILES_TO_LINK) $(ALL_LIB_DIRS) $(ALL_LIBS)$(END_ECHO)
++	$(ECHO_LINKING)$(LD) $(CC_LDFLAGS) -o $(LDOUT)$@ $(OBJ_FILES_TO_LINK) \
++	$(ALL_LDFLAGS) $(ALL_LIB_DIRS) $(ALL_LIBS)$(END_ECHO)
+ 
+ #
+ # Compilation targets
+--- origsrc/gnustep-make-2.2.0/Instance/tool.make	2009-03-19 11:59:53.000000000 -0500
++++ src/gnustep-make-2.2.0/Instance/tool.make	2009-08-16 04:21:47.358419800 -0500
+@@ -85,9 +85,9 @@ $(GNUSTEP_OBJ_DIR)/$(GNUSTEP_INSTANCE)$(
+ ifeq ($(OBJ_FILES_TO_LINK),)
+ 	$(WARNING_EMPTY_LINKING)
+ endif
+-	$(ECHO_LINKING)$(LD) $(ALL_LDFLAGS) $(CC_LDFLAGS) -o $(LDOUT)$@ \
++	$(ECHO_LINKING)$(LD) $(CC_LDFLAGS) -o $(LDOUT)$@ \
+ 		$(OBJ_FILES_TO_LINK) \
+-		$(ALL_LIB_DIRS) $(ALL_LIBS)$(END_ECHO)
++		$(ALL_LDFLAGS) $(ALL_LIB_DIRS) $(ALL_LIBS)$(END_ECHO)
+ 
+ internal-tool-copy_into_dir::
+ 	$(ECHO_COPYING_INTO_DIR)$(MKDIRS) $(COPY_INTO_DIR)/$(GNUSTEP_TARGET_LDIR);\
