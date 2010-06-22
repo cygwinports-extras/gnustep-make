@@ -1,6 +1,6 @@
 category: GNUstep
 requires: bash
-external-source: gnustep-common
+external-source: gnustep-make
 sdesc: "GNUstep common environment"
 ldesc: "This makefile package is a simple, powerful and extensible way 
 to write makefiles for a GNUstep-based project.  It allows the user to 
