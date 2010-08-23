@@ -3,11 +3,13 @@
 DESCRIPTION="GNUstep makefiles and build tools"
 HOMEPAGE="http://www.gnustep.org/"
 SRC_URI="mirror://gnustep/core/${P}.tar.gz"
-PATCH_URI="2.2.0-cygwin-dll.patch
-           2.2.0-cygwin-dll-2.patch
-           2.2.0-cygwin-not-win32.patch
-           2.2.0-as-needed.patch
-           2.2.0-includedir.patch"
+
+PATCH_URI="
+	2.4.0-cygwin-configure.patch
+	2.4.0-cygwin-dll.patch
+	2.2.0-as-needed.patch
+	2.2.0-includedir.patch
+"
 
 mf=usr/share/GNUstep/Makefiles
 
@@ -26,6 +28,8 @@ gnustep_make_CONTENTS="usr/bin/gnustep-config ${mf}/Instance/ ${mf}/Master/
 DIFF_EXCLUDES="Documentation"
 
 src_compile() {
+	cd ${S}
+	cygautoreconf
 	cd ${B}
 	cygconf --with-layout=fhs-system
 	cygmake

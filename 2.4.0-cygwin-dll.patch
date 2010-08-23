@@ -1,14 +1,6 @@
-
-	* Instance/framework.make: the basename framework symlink does not use
-	the DLL extension.
-	* target.make [cygwin]: Don't use -Wl,--whole-archive/--no-whole-archive.
-	Move ALL_LDFLAGS after OBJ_FILES_TO_LINK so that any link libraries
-	defined therein (e.g. ADDITIONAL_LDFLAGS) actually do something.
-	Fix EXTRACT_CLASS_NAMES_COMMAND for Cygwin.
-
---- origsrc/gnustep-make-2.2.0/Instance/framework.make	2009-08-16 02:10:07.594453700 -0500
-+++ src/gnustep-make-2.2.0/Instance/framework.make	2009-08-16 03:30:50.734214300 -0500
-@@ -620,7 +620,7 @@ $(FRAMEWORK_VERSION_DIR)/Resources/Info-
+--- origsrc/gnustep-make-2.4.0/Instance/framework.make	2010-02-14 17:13:47.000000000 -0600
++++ src/gnustep-make-2.4.0/Instance/framework.make	2010-08-11 19:32:45.968198900 -0500
+@@ -640,7 +640,7 @@ $(FRAMEWORK_VERSION_DIR)/Resources/Info-
                          $(DUMMY_FRAMEWORK_FILE) \
                          $(GNUSTEP_PLIST_DEPEND)
  	$(ECHO_CREATING)(echo "{"; echo '  NOTE = "Automatically generated, do not edit!";'; \
@@ -17,21 +9,21 @@
  	  echo "  NSMainNibFile = \"$(MAIN_MODEL_FILE)\";"; \
  	  echo "  NSPrincipalClass = \"$(PRINCIPAL_CLASS)\";"; \
  	  echo "  Classes = "; \
---- origsrc/gnustep-make-2.2.0/target.make	2009-08-16 02:10:08.673220200 -0500
-+++ src/gnustep-make-2.2.0/target.make	2009-08-16 03:12:07.503551500 -0500
-@@ -921,7 +921,7 @@ ifeq ($(findstring cygwin, $(GNUSTEP_TAR
+--- origsrc/gnustep-make-2.4.0/target.make	2010-03-06 15:13:58.000000000 -0600
++++ src/gnustep-make-2.4.0/target.make	2010-07-15 19:09:32.886616500 -0500
+@@ -927,7 +927,7 @@ ifeq ($(findstring cygwin, $(GNUSTEP_TAR
  shared = yes
  HAVE_SHARED_LIBS = yes
  # This command links the library, generates automatically the list of
 -# symbols to export, creates the DLL (eg, obj/gnustep-base.dll) and 
-+# symbols to export, creates the DLL (eg, obj/cyggnustep-base-1_18.dll) and 
++# symbols to export, creates the DLL (eg, obj/cyggnustep-base-1_20.dll) and 
  # the import library
  SHARED_LIB_LINK_CMD     = \
          $(LD) $(SHARED_LD_PREFLAGS) -shared -o $(LIB_LINK_OBJ_DIR)/$(LIB_LINK_DLL_FILE) \
-@@ -929,8 +929,8 @@ SHARED_LIB_LINK_CMD     = \
+@@ -935,8 +935,8 @@ SHARED_LIB_LINK_CMD     = \
+ 	-Wl,--out-implib=$(LIB_LINK_OBJ_DIR)/$(LIB_LINK_VERSION_FILE) \
  	-Wl,--export-all-symbols \
  	-Wl,--enable-auto-import \
- 	-Wl,--enable-auto-image-base \
 -	-Wl,--whole-archive $(OBJ_FILES_TO_LINK) $(ALL_LDFLAGS) \
 -	-Wl,--no-whole-archive $(INTERNAL_LIBRARIES_DEPEND_UPON) $(TARGET_SYSTEM_LIBS)\
 +	$(OBJ_FILES_TO_LINK) $(ALL_LDFLAGS) \
@@ -39,14 +31,14 @@
  	$(SHARED_LD_POSTFLAGS)
  	
  AFTER_INSTALL_SHARED_LIB_CMD = 
-@@ -952,14 +952,16 @@ HAVE_BUNDLES   = yes
+@@ -958,16 +958,17 @@ HAVE_BUNDLES   = yes
  BUNDLE_LD      = $(LD)
  BUNDLE_LDFLAGS += -shared -Wl,--export-all-symbols \
  	-Wl,--enable-auto-import \
--	-Wl,--enable-auto-image-base \
+-        -Wl,--enable-auto-image-base \
 -	-Wl,--whole-archive
 -BUNDLE_LIBFLAGS += -Wl,--no-whole-archive
-+	-Wl,--enable-auto-image-base
++        -Wl,--enable-auto-image-base
  BUNDLE_LINK_CMD  = \
 -        $(BUNDLE_LD) $(BUNDLE_LDFLAGS) $(ALL_LDFLAGS) \
 +        $(BUNDLE_LD) $(BUNDLE_LDFLAGS) \
@@ -54,10 +46,11 @@
  	$(OBJ_FILES_TO_LINK) \
 -	$(BUNDLE_LIBFLAGS) $(ALL_LIB_DIRS) $(BUNDLE_LIBS)
 +	$(ALL_LDFLAGS) $(BUNDLE_LIBFLAGS) $(ALL_LIB_DIRS) $(BUNDLE_LIBS)
-+
+ endif
+ 
 +# On Cygwin, the class name symbols start with '___' rather than '__'
 +EXTRACT_CLASS_NAMES_COMMAND = nm -Pg $$object_file | sed -n -e '/^___objc_class_name_[A-Za-z_.]* [^U]/ {s/^___objc_class_name_\([A-Za-z_.]*\) [^U].*/\1/p;}'
 +
- endif
- 
  # end Cygwin
+ #
+ ####################################################
