@@ -3,6 +3,7 @@
 DESCRIPTION="GNUstep makefiles and build tools"
 HOMEPAGE="http://www.gnustep.org/"
 SRC_URI="mirror://gnustep/core/${P}.tar.gz"
+SRC_URI+=" X-GNUstep.directory gnustep.menu"
 
 PATCH_URI="
 	2.4.0-cygwin-configure.patch
@@ -16,10 +17,10 @@ mf=usr/share/GNUstep/Makefiles
 PKG_NAMES="${PN} gnustep-common"
 PKG_HINTS="setup common"
 gnustep_common_CONTENTS="--exclude=*-config* --exclude=*.make
-                         etc/GNUstep/GNUstep.conf usr/bin/ ${mf}/GNUstep*sh
+                         etc/GNUstep/ etc/xdg/ usr/bin/ ${mf}/GNUstep*sh
                          ${mf}/clean_*.sh ${mf}/config.* ${mf}/cpu.sh
                          ${mf}/fi*.*sh ${mf}/os.sh ${mf}/vendor.sh
-                         usr/share/doc/ usr/share/man/"
+                         usr/share/desktop-directories/ usr/share/doc/ usr/share/man/"
 gnustep_make_CONTENTS="usr/bin/gnustep-config ${mf}/Instance/ ${mf}/Master/ ${mf}/TestFramework/
                        ${mf}/*.make ${mf}/*.template ${mf}/gnustep-make-help
                        ${mf}/install-sh ${mf}/mkinstalldirs ${mf}/*_path*.sh
@@ -33,4 +34,15 @@ src_compile() {
 	cd ${B}
 	cygconf --with-layout=fhs-system
 	cygmake
+}
+
+src_install() {
+	cd ${B}
+	cyginstall
+
+	insinto /etc/xdg/menus/applications-merged
+	doins ${S}/gnustep.menu
+
+	insinto /usr/share/desktop-directories
+	doins ${S}/X-GNUstep.directory
 }
