@@ -20,7 +20,7 @@ gnustep_common_CONTENTS="--exclude=*-config* --exclude=*.make
                          ${mf}/clean_*.sh ${mf}/config.* ${mf}/cpu.sh
                          ${mf}/fi*.*sh ${mf}/os.sh ${mf}/vendor.sh
                          usr/share/doc/ usr/share/man/"
-gnustep_make_CONTENTS="usr/bin/gnustep-config ${mf}/Instance/ ${mf}/Master/
+gnustep_make_CONTENTS="usr/bin/gnustep-config ${mf}/Instance/ ${mf}/Master/ ${mf}/TestFramework/
                        ${mf}/*.make ${mf}/*.template ${mf}/gnustep-make-help
                        ${mf}/install-sh ${mf}/mkinstalldirs ${mf}/*_path*.sh
                        ${mf}/strip_makefiles.sh ${mf}/tar-exclude-list
