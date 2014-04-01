@@ -1,6 +1,14 @@
 # we cannot 'inherit gnustep' before this is installed
 
-DESCRIPTION="GNUstep makefiles and build tools"
+NAME="gnustep-make"
+VERSION=2.6.2
+RELEASE=1
+CATEGORY="Devel"
+SUMMARY="GNUstep makefiles"
+DESCRIPTION="This makefile package is a simple, powerful and extensible way to
+write makefiles for a GNUstep-based project.  It allows the user to write a
+project without having to deal with the complex issues associated with
+configuration, building, installation, and packaging."
 HOMEPAGE="http://www.gnustep.org/"
 SRC_URI="mirror://gnustep/core/${P}.tar.gz"
 SRC_URI+=" X-GNUstep.directory gnustep.menu"
@@ -14,13 +22,15 @@ PATCH_URI="
 
 mf=usr/share/GNUstep/Makefiles
 
-PKG_NAMES="${PN} gnustep-common"
-PKG_HINTS="setup common"
+PKG_NAMES="${NAME} gnustep-common"
+gnustep_common_CATEGORY="GNUstep"
+gnustep_common_SUMMARY="GNUstep common environment"
 gnustep_common_CONTENTS="--exclude=*-config* --exclude=*.make
                          etc/GNUstep/ etc/xdg/ usr/bin/ ${mf}/GNUstep*sh
                          ${mf}/clean_*.sh ${mf}/config.* ${mf}/cpu.sh
                          ${mf}/fi*.*sh ${mf}/os.sh ${mf}/vendor.sh
                          usr/share/desktop-directories/ usr/share/doc/ usr/share/man/"
+gnustep_make_REQUIRES="gnustep-common bash gcc-objc make"
 gnustep_make_CONTENTS="usr/bin/gnustep-config ${mf}/Instance/ ${mf}/Master/ ${mf}/TestFramework/
                        ${mf}/*.make ${mf}/*.template ${mf}/gnustep-make-help
                        ${mf}/install-sh ${mf}/mkinstalldirs ${mf}/*_path*.sh
